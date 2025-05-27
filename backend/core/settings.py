@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
-    "documents",
+    "api",
 ]
 
 MIDDLEWARE = [
@@ -84,7 +84,7 @@ DATABASES = {
         "NAME": "doc_intel",
         "USER": "doc_user",
         "PASSWORD": "doc_pass",
-        "HOST": "localhost",  # or "mysql" if using Docker networking
+        "HOST": "127.0.0.1",  # or "mysql" if using Docker networking
         "PORT": "3001",  # or 3306 inside container
     }
 }
