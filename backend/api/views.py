@@ -1,39 +1,34 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-
-@api_view(["GET"])
-def ping(_):
-    return Response({"message": "pong"})
+from api.models import Document
+from api.serializers import DocumentSerializer
 
 
 @api_view(["GET"])
 def get_all_documents(_):
-    return Response({"documents": []})
-
-
-@api_view(["GET"])
-def get_document_metadata(_, document_id):
+    documents = Document.objects.all()
     return Response(
-        {
-            "document_id": document_id,
-            "metadata": {
-                "created_at": "2023-10-01T12:00:00Z",
-            },
-        }
+        {"documents": DocumentSerializer(documents, many=True).data},
+        status=200,
     )
 
 
 @api_view(["POST"])
 def upload_document(request):
-    # Simulate document upload logic
-    document = request.data.get("document")
-    if not document:
+    file = request.data.get("document")
+    if not file:
         return Response({"error": "No document provided"}, status=400)
 
-    # Here you would typically save the document and return its ID
+    document = Document.objects.create(file=file, title=file.name)
     return Response(
-        {"message": "Document uploaded successfully", "document_id": 1}
+        {
+            "message": "Document uploaded successfully",
+            "document_id": document.id,
+            "file_url": document.file.url,
+        },
+        status=201,
     )
 
 
@@ -45,7 +40,7 @@ def ask_question(request):
 
     # Simulate answering the question
     answer = f"Answer to '{question}'"
-    return Response({"question": question, "answer": answer})
+    return Response({"question": question, "answer": answer}, status=200)
 
 
 @api_view(["GET", "DELETE"])
@@ -57,17 +52,16 @@ def document_action(_, document_id):
 
 
 def get_document_by_id(_, document_id):
+    document = get_object_or_404(Document, id=document_id)
     return Response(
-        {"document_id": document_id, "content": "Sample content for document."}
+        {"metadata": DocumentSerializer(document).data}, status=200
     )
 
 
 def delete_document(_, document_id):
-    # Simulate document deletion logic
-    if not document_id:
-        return Response({"error": "Document ID not provided"}, status=400)
+    document = get_object_or_404(Document, id=document_id)
+    document.delete()
 
-    # Here you would typically delete the document and confirm deletion
     return Response(
-        {"message": f"Document {document_id} deleted successfully"}
+        {"message": f"Document {document.id} deleted successfully"}, status=200
     )
