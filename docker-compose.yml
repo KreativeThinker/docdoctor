@@ -1,0 +1,27 @@
+services:
+  mysql:
+    image: mysql:8.0
+    restart: always
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: doc_intel
+      MYSQL_USER: doc_user
+      MYSQL_PASSWORD: doc_pass
+    ports:
+      - "${MYSQL_PORT:-3001}:3306"
+    volumes:
+      - ${MYSQL_VOLUME:-mysql_data}:/var/lib/mysql
+
+  chromadb:
+    image: chromadb/chroma
+    container_name: chromadb
+    restart: always
+    ports:
+      - "${CHROMADB_PORT:-3002}:8000"
+    volumes:
+      - ${CHROMA_VOLUME:-chroma_data}:/chroma/.chroma
+
+volumes:
+  mysql_data:
+  chroma_data:
