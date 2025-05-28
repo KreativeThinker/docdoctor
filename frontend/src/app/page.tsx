@@ -3,6 +3,7 @@
 import { FileText, Trash2, MessageSquare, Calendar } from 'lucide-react'
 import Link from 'next/link'
 import { useDocuments } from '@/hooks/use-documents'
+import NavLink from '@/components/ui/link'
 
 export default function LibraryPage() {
   const { documents, deleteDocument } = useDocuments()
@@ -28,27 +29,21 @@ export default function LibraryPage() {
           <h1 className="text-3xl font-bold text-gray-900">Document Library</h1>
           <p className="text-gray-600">Manage your uploaded documents and start conversations</p>
         </div>
-        <Link
-          href="/upload"
-          className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700"
-        >
+        <NavLink href="/upload" active>
           Upload Document
-        </Link>
+        </NavLink>
       </div>
 
       {documents.length === 0 ? (
-        <div className="rounded-lg border border-gray-200 bg-white py-12 text-center shadow-sm">
-          <FileText className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-          <h3 className="mb-2 text-lg font-semibold text-gray-900">No documents yet</h3>
-          <p className="mb-4 text-gray-600">
+        <div className="border-neutral-1 bg-neutral-1 rounded-lg border py-36 text-center shadow-sm">
+          <FileText className="text-foreground mx-auto mb-4 h-12 w-12" />
+          <h3 className="text-neutral-6 mb-2 text-lg font-semibold">No documents yet</h3>
+          <p className="text-neutral-5 mb-4">
             Upload your first document to get started with AI-powered conversations
           </p>
-          <Link
-            href="/upload"
-            className="inline-block rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700"
-          >
+          <NavLink href="/upload" className="mx-auto w-fit" active>
             Upload Document
-          </Link>
+          </NavLink>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
