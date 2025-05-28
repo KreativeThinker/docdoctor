@@ -1,9 +1,8 @@
 'use client'
 
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Button } from '@/components/ui/button'
 import { FileText, MessageSquare, Upload, Library } from 'lucide-react'
+import NavLink from '@/components/ui/link'
 
 export function Navigation() {
   const pathname = usePathname()
@@ -15,23 +14,22 @@ export function Navigation() {
   ]
 
   return (
-    <nav className="bg-background/95 supports-[backdrop-filter]:bg-background/60 border-b backdrop-blur">
+    <nav className="bg-background border-b shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-2">
-            <FileText className="h-6 w-6" />
-            <span className="text-xl font-bold">DocChat</span>
+            <FileText className="text-primary h-6 w-6" />
+            <span className="text-primary text-xl font-bold">DocChat</span>
           </div>
           <div className="flex items-center space-x-2">
             {navItems.map((item) => {
               const Icon = item.icon
+              const isActive = pathname === item.href
               return (
-                <Button key={item.href} variant={pathname === item.href ? 'primary' : 'secondary'}>
-                  <Link href={item.href} className="flex items-center space-x-2">
-                    <Icon className="h-4 w-4" />
-                    <span>{item.label}</span>
-                  </Link>
-                </Button>
+                <NavLink key={item.href} href={item.href} active={isActive}>
+                  <Icon className="h-4 w-4" />
+                  <span>{item.label}</span>
+                </NavLink>
               )
             })}
           </div>
