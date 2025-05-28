@@ -35,15 +35,17 @@ export default function LibraryPage() {
       </div>
 
       {documents.length === 0 ? (
-        <div className="border-neutral-1 bg-neutral-1 rounded-lg border py-36 text-center shadow-sm">
-          <FileText className="text-foreground mx-auto mb-4 h-12 w-12" />
-          <h3 className="text-neutral-6 mb-2 text-lg font-semibold">No documents yet</h3>
-          <p className="text-neutral-5 mb-4">
-            Upload your first document to get started with AI-powered conversations
-          </p>
-          <NavLink href="/upload" className="mx-auto w-fit" active>
-            Upload Document
-          </NavLink>
+        <div className="bg-neutral-1/60 flex rounded-xl shadow-sm">
+          <div className="border-neutral-4 m-4 h-full w-full rounded-lg border-3 border-dashed py-36 text-center">
+            <FileText className="text-foreground mx-auto mb-4 h-12 w-12" />
+            <h3 className="text-neutral-6 mb-2 text-lg font-semibold">No documents yet</h3>
+            <p className="text-neutral-5 mb-4">
+              Upload your first document to get started with AI-powered conversations
+            </p>
+            <NavLink href="/upload" className="mx-auto w-fit" active>
+              Upload Document
+            </NavLink>
+          </div>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
