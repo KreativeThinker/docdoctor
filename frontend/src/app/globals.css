@@ -6,11 +6,12 @@
 
   --primary: #4545ab;
 
-  --netrual-1: #949494;
-  --netrual-2: #464646;
-  --netrual-3: #3a3a3a;
-  /* --netrual-4: #3e3e6b; */
-  /* --netrual-5: #35345b; */
+  --neutral-1: #d2d2d2;
+  --neutral-2: #c3c3c3;
+  --neutral-3: #a4a4a4;
+  --neutral-4: #848484;
+  --neutral-5: #656565;
+  --neutral-6: #464646;
 }
 
 @theme inline {
@@ -19,12 +20,12 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-primary: var(--primary);
-  --color-secondary: var(--secondary);
-  --color-netrual-1: var(--netrual-1);
-  --color-netrual-2: var(--netrual-2);
-  --color-netrual-3: var(--netrual-3);
-  /* --color-netrual-4: var(--netrual-4); */
-  /* --color-netrual-5: var(--netrual-5); */
+  --color-neutral-1: var(--neutral-1);
+  --color-neutral-2: var(--neutral-2);
+  --color-neutral-3: var(--neutral-3);
+  --color-neutral-4: var(--neutral-4);
+  --color-neutral-5: var(--neutral-5);
+  --color-neutral-6: var(--neutral-6);
 }
 
 /* @media (prefers-color-scheme: dark) { */
@@ -35,11 +36,11 @@
 /*     --primary: #e87811; */
 /*     --secondary: #7fdeff; */
 /**/
-/*     --netrual-1: #b9b9b9; */
-/*     --netrual-2: #7066b1; */
-/*     --netrual-3: #4f518c; */
-/*     --netrual-4: #3e3e6b; */
-/*     --netrual-5: #35345b; */
+/*     --neutral-1: #b9b9b9; */
+/*     --neutral-2: #7066b1; */
+/*     --neutral-3: #4f518c; */
+/*     --neutral-4: #3e3e6b; */
+/*     --neutral-5: #35345b; */
 /*   } */
 /* } */
 
