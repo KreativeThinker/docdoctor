@@ -13,9 +13,9 @@ export function Button({
   disabled,
   variant = 'primary',
 }: ButtonProps) {
-  const primaryStyles = 'bg-blue-500 hover:bg-blue-600 text-white'
-  const secondaryStyles = 'border border-gray-500 hover:bg-gray-600 text-white'
-  const baseStyles = 'px-4 py-2 rounded'
+  const primaryStyles = 'bg-primary text-background'
+  const secondaryStyles = 'border border-primary text-primary'
+  const baseStyles = 'px-4 py-2 rounded font-bold flex flex-row'
   const variantStyles = variant === 'primary' ? primaryStyles : secondaryStyles
 
   return (
