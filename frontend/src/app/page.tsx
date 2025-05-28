@@ -26,8 +26,8 @@ export default function LibraryPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Document Library</h1>
-          <p className="text-gray-600">Manage your uploaded documents and start conversations</p>
+          <h1 className="text-foreground text-3xl font-bold">Document Library</h1>
+          <p className="text-neutral-5">Manage your uploaded documents and start conversations</p>
         </div>
         <NavLink href="/upload" active>
           Upload Document
