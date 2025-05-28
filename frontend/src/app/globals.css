@@ -1,16 +1,16 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #dabfff;
-  --foreground: #2c2a4a;
-  --primary: #907ad6;
-  --secondary: #7fdeff;
+  --background: #e2e2e2;
+  --foreground: #2e2e2e;
 
-  --netrual-1: #8070c4;
-  --netrual-2: #7066b1;
-  --netrual-3: #4f518c;
-  --netrual-4: #3e3e6b;
-  --netrual-5: #35345b;
+  --primary: #4545ab;
+
+  --netrual-1: #949494;
+  --netrual-2: #464646;
+  --netrual-3: #3a3a3a;
+  /* --netrual-4: #3e3e6b; */
+  /* --netrual-5: #35345b; */
 }
 
 @theme inline {
@@ -23,24 +23,25 @@
   --color-netrual-1: var(--netrual-1);
   --color-netrual-2: var(--netrual-2);
   --color-netrual-3: var(--netrual-3);
-  --color-netrual-4: var(--netrual-4);
-  --color-netrual-5: var(--netrual-5);
+  /* --color-netrual-4: var(--netrual-4); */
+  /* --color-netrual-5: var(--netrual-5); */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #2c2a4a;
-    --foreground: #dabfff;
-    --primary: #907ad6;
-    --secondary: #7fdeff;
-
-    --netrual-1: #8070c4;
-    --netrual-2: #7066b1;
-    --netrual-3: #4f518c;
-    --netrual-4: #3e3e6b;
-    --netrual-5: #35345b;
-  }
-}
+/* @media (prefers-color-scheme: dark) { */
+/*   :root { */
+/*     --background: #2e2e2e; */
+/*     --foreground: #e2e2e2; */
+/**/
+/*     --primary: #e87811; */
+/*     --secondary: #7fdeff; */
+/**/
+/*     --netrual-1: #b9b9b9; */
+/*     --netrual-2: #7066b1; */
+/*     --netrual-3: #4f518c; */
+/*     --netrual-4: #3e3e6b; */
+/*     --netrual-5: #35345b; */
+/*   } */
+/* } */
 
 body {
   background: var(--background);
