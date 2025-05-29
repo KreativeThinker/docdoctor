@@ -70,6 +70,7 @@ def get_document_by_id(_, document_id):
 
 def delete_document(_, document_id):
     document = get_object_or_404(Document, id=document_id)
+    document.file.delete(save=False)
     document.delete()
 
     return Response(
