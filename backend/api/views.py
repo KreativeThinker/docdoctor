@@ -73,3 +73,22 @@ def delete_document(_, document_id):
     return Response(
         {"message": f"Document {document.id} deleted successfully"}, status=200
     )
+
+
+@api_view(["GET"])
+def search_documents(request):
+    query = request.query_params.get("q", "")
+    tag_filter = request.query_params.getlist("tag")
+
+    documents = Document.objects.all()
+
+    if query:
+        documents = documents.filter(title__icontains=query)
+
+    if tag_filter:
+        documents = documents.filter(tags__name__in=tag_filter).distinct()
+
+    return Response(
+        {"documents": DocumentSerializer(documents, many=True).data},
+        status=200,
+    )
