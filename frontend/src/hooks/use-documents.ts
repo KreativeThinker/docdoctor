@@ -53,7 +53,7 @@ export function useDocuments() {
       formData.append('document', file)
 
       // Add tags if they exist in your document structure
-      formData.append('tags', JSON.stringify(doc.tags || []))
+      // formData.append('tags', JSON.stringify(doc.tags || []))
 
       const response = await fetch(`${baseUrl}/documents/upload/`, {
         method: 'POST',

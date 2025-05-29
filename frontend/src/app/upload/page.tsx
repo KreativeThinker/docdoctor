@@ -70,7 +70,6 @@ export default function UploadPage() {
         content,
         size: file.size,
         type: file.type,
-        tags,
       })
       setUploaded(true)
       setTimeout(() => router.push('/'), 1500)
