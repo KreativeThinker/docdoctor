@@ -1,55 +1,70 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import baseUrl from '@/hooks/use-api'
 
 export interface Document {
-  id: string
-  name: string
-  content: string
-  size: number
-  type: string
-  uploadedAt: string
+  id: number
+  title: string
+  file_url: string
+  uploaded_at: string
   tags: string[]
 }
 
 export function useDocuments() {
   const [documents, setDocuments] = useState<Document[]>([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const stored = localStorage.getItem('documents')
-    if (stored) {
-      setDocuments(JSON.parse(stored))
-    }
+    fetchDocuments()
   }, [])
 
-  const saveDocuments = (docs: Document[]) => {
-    localStorage.setItem('documents', JSON.stringify(docs))
-    setDocuments(docs)
-  }
-
-  const addDocument = (doc: Omit<Document, 'id' | 'uploadedAt'>) => {
-    const newDoc: Document = {
-      ...doc,
-      id: Date.now().toString(),
-      uploadedAt: new Date().toISOString(),
+  const fetchDocuments = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch(`${baseUrl}/documents/`)
+      const data = await res.json()
+      setDocuments(data.documents)
+    } catch (err) {
+      console.error('Failed to fetch documents', err)
+    } finally {
+      setLoading(false)
     }
-    const updatedDocs = [...documents, newDoc]
-    saveDocuments(updatedDocs)
   }
 
-  const deleteDocument = (id: string) => {
-    const updatedDocs = documents.filter((doc) => doc.id !== id)
-    saveDocuments(updatedDocs)
+  const uploadDocument = async (file: File, tags: string[] = []) => {
+    const formData = new FormData()
+    formData.append('document', file)
+    tags.forEach((tag) => formData.append('tags', tag))
+
+    try {
+      const res = await fetch(`${baseUrl}/documents/upload/`, {
+        method: 'POST',
+        body: formData,
+      })
+      if (!res.ok) throw new Error('Upload failed')
+      await fetchDocuments()
+    } catch (err) {
+      console.error('Failed to upload', err)
+    }
   }
 
-  const getDocument = (id: string) => {
-    return documents.find((doc) => doc.id === id)
+  const deleteDocument = async (id: number) => {
+    try {
+      await fetch(`${baseUrl}/documents/${id}/`, {
+        method: 'DELETE',
+      })
+      setDocuments((docs) => docs.filter((d) => d.id !== id))
+    } catch (err) {
+      console.error('Failed to delete', err)
+    }
   }
 
   return {
     documents,
-    addDocument,
+    loading,
+    uploadDocument,
     deleteDocument,
-    getDocument,
+    refresh: fetchDocuments,
   }
 }

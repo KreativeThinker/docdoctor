@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import baseUrl from './use-api'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -12,38 +13,30 @@ export function useChat() {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const sendMessage = async (message: string, documentContent: string) => {
+  const sendMessage = async (message: string) => {
     const userMessage: Message = { role: 'user', content: message }
     setMessages((prev) => [...prev, userMessage])
     setIsLoading(true)
 
     try {
-      // Simulate AI response - replace with actual AI API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const res = await fetch(`${baseUrl}}/ask/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: message }),
+      })
+      const data = await res.json()
 
       const aiResponse: Message = {
         role: 'assistant',
-        content: `I understand you're asking about: "${message}". Based on the document content, here's my response. (This is a simulated response - integrate with your preferred AI service like OpenAI, Anthropic, etc.)`,
+        content: data.answer,
       }
 
       setMessages((prev) => [...prev, aiResponse])
-    } catch (error) {
-      console.error('Chat error:', error)
-      const errorMessage: Message = {
-        role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
-      }
-      setMessages((prev) => [...prev, errorMessage])
+    } catch (err) {
+      console.error(err)
+      setMessages((prev) => [...prev, { role: 'assistant', content: 'Error occurred.' }])
     } finally {
       setIsLoading(false)
     }
-  }
-
-  return {
-    messages,
-    input,
-    setInput,
-    sendMessage,
-    isLoading,
   }
 }
