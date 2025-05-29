@@ -30,6 +30,8 @@ export default function ChatPage() {
     }
   }
 
+  console.log(document)
+
   if (!document) {
     return (
       <div className="flex h-[60vh] items-center justify-center">
@@ -56,10 +58,8 @@ export default function ChatPage() {
             </h2>
           </div>
           <div className="flex-1 overflow-hidden p-6">
-            <div className="h-full overflow-y-auto">
-              <div className="neutral-1space-pre-wrap text-sm leading-relaxed text-gray-700">
-                {document.content}
-              </div>
+            <div className="h-full">
+              <iframe src={`http://localhost:3003${document.file}`} className="h-full w-full" />
             </div>
           </div>
         </div>
