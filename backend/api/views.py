@@ -23,7 +23,9 @@ def upload_document(request):
     if not file:
         return Response({"error": "No document provided"}, status=400)
 
-    document = Document.objects.create(file=file, title=file.name)
+    document = Document.objects.create(
+        file=file, title=file.name, size=file.size
+    )
 
     if tags:
         for tag_name in tags:

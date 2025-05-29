@@ -7,6 +7,7 @@ class Document(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=255, null=False)
     tags = models.ManyToManyField("Tags", related_name="documents", blank=True)
+    size = models.PositiveIntegerField(null=False, default=0)
     objects: Manager = models.Manager()
 
 
