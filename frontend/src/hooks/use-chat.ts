@@ -1,5 +1,4 @@
 'use client'
-
 import { useState } from 'react'
 import baseUrl from './use-api'
 
@@ -13,30 +12,51 @@ export function useChat() {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const sendMessage = async (message: string) => {
+  const sendMessage = async (message: string, documentContent: string) => {
     const userMessage: Message = { role: 'user', content: message }
     setMessages((prev) => [...prev, userMessage])
     setIsLoading(true)
 
     try {
-      const res = await fetch(`${baseUrl}}/ask/`, {
+      const response = await fetch(`${baseUrl}/ask/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: message }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: message,
+          // You might want to pass document context if your backend supports it
+          document_content: documentContent,
+        }),
       })
-      const data = await res.json()
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
       const aiResponse: Message = {
         role: 'assistant',
         content: data.answer,
       }
-
       setMessages((prev) => [...prev, aiResponse])
-    } catch (err) {
-      console.error(err)
-      setMessages((prev) => [...prev, { role: 'assistant', content: 'Error occurred.' }])
+    } catch (error) {
+      console.error('Chat error:', error)
+      const errorMessage: Message = {
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.',
+      }
+      setMessages((prev) => [...prev, errorMessage])
     } finally {
       setIsLoading(false)
     }
+  }
+
+  return {
+    messages,
+    input,
+    setInput,
+    sendMessage,
+    isLoading,
   }
 }
