@@ -1,18 +1,43 @@
 'use client'
 
 import type React from 'react'
-
-import { useState } from 'react'
-import { Upload, FileText, CheckCircle } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Upload, CheckCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useDocuments } from '@/hooks/use-documents'
+import { Button } from '@/components/ui/button'
 
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null)
+  const [fileName, setFileName] = useState('')
+  const [previewURL, setPreviewURL] = useState('')
   const [uploading, setUploading] = useState(false)
   const [uploaded, setUploaded] = useState(false)
+  const [tagInput, setTagInput] = useState('')
+  const [tags, setTags] = useState<string[]>([])
+
   const router = useRouter()
   const { addDocument } = useDocuments()
+
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && tagInput.trim()) {
+      e.preventDefault()
+      const trimmed = tagInput.trim()
+      if (!tags.includes(trimmed)) {
+        setTags([...tags, trimmed])
+      }
+      setTagInput('')
+    }
+  }
+
+  const handleCancel = () => {
+    setFile(null)
+    setFileName('')
+    setTagInput('')
+    setTags([])
+    setUploaded(false)
+    setPreviewURL('')
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
@@ -28,36 +53,29 @@ export default function UploadPage() {
         return
       }
       setFile(selectedFile)
+      setFileName(selectedFile.name)
       setUploaded(false)
     }
   }
 
   const handleUpload = async () => {
     if (!file) return
-
     setUploading(true)
 
     try {
-      // Simulate file processing
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      // Read file content
+      await new Promise((r) => setTimeout(r, 2000))
       const content = await readFileContent(file)
-
-      // Add document to localStorage
       addDocument({
-        name: file.name,
+        name: fileName || file.name,
         content,
         size: file.size,
         type: file.type,
+        tags,
       })
-
       setUploaded(true)
-      setTimeout(() => {
-        router.push('/')
-      }, 1500)
-    } catch (error) {
-      console.error('Upload failed:', error)
+      setTimeout(() => router.push('/'), 1500)
+    } catch (err) {
+      console.error('Upload failed:', err)
       alert('Upload failed. Please try again.')
     } finally {
       setUploading(false)
@@ -67,87 +85,124 @@ export default function UploadPage() {
   const readFileContent = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
-      reader.onload = (e) => {
-        const content = e.target?.result as string
-        resolve(content)
-      }
+      reader.onload = (e) => resolve(e.target?.result as string)
       reader.onerror = reject
       reader.readAsText(file)
     })
   }
 
+  useEffect(() => {
+    if (!file) return
+    const url = URL.createObjectURL(file)
+    setPreviewURL(url)
+    return () => URL.revokeObjectURL(url)
+  }, [file])
+
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="mx-auto space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Upload Document</h1>
-        <p className="text-gray-600">
+        <h1 className="text-foreground text-3xl font-bold">Document Upload</h1>
+        <p className="text-neutral-5">
           Upload a document to start chatting with AI about its contents
         </p>
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900">Select Document</h2>
-          <p className="text-gray-600">Supported formats: PDF, TXT, DOC, DOCX (Max 10MB)</p>
-        </div>
-        <div className="space-y-6 p-6">
-          <div className="space-y-2">
-            <label htmlFor="file" className="block text-sm font-medium text-gray-700">
-              Choose file
-            </label>
-            <input
-              id="file"
-              type="file"
-              accept=".pdf,.txt,.doc,.docx"
-              onChange={handleFileChange}
-              disabled={uploading || uploaded}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
-            />
+      {!file ? (
+        <label className="hover:border-primary border-neutral-4 bg-neutral-1 flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed py-36 shadow-md transition">
+          <input
+            type="file"
+            accept=".pdf,.txt,.doc,.docx"
+            onChange={handleFileChange}
+            disabled={uploading || uploaded}
+            className="hidden"
+          />
+          <span className="text-foreground text-2xl">📂 Click to upload</span>
+          <span className="text-neutral-5 mt-2 text-lg">
+            Supported Formats: PDF, TXT, DOC, DOCX, (Max 10MB)
+          </span>
+        </label>
+      ) : (
+        <div className="border-neutral-4 bg-neutral-1 m-4 flex h-full w-full flex-col rounded-lg border-2 border-dashed md:flex-row">
+          <div className="flex flex-1 items-center justify-center border-b-2 border-dashed p-6 md:border-r-2 md:border-b-0">
+            {file.type.includes('pdf') ? (
+              <iframe src={previewURL} className="h-full w-full" />
+            ) : (
+              <p>No preview available</p>
+            )}
           </div>
 
-          {file && (
-            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-              <div className="flex items-center space-x-3">
-                <FileText className="h-8 w-8 text-blue-500" />
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900">{file.name}</p>
-                  <p className="text-sm text-gray-600">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                </div>
-                {uploaded && <CheckCircle className="h-6 w-6 text-green-500" />}
-              </div>
+          <div className="flex-1 space-y-4 p-6">
+            <div>
+              <label className="text-neutral-6 block text-sm font-medium">File Name</label>
+              <input
+                type="text"
+                className="border-neutral-4 bg-neutral-2 mt-1 block w-full rounded-md border p-2"
+                value={fileName}
+                onChange={(e) => setFileName(e.target.value)}
+              />
+              <p className="text-neutral-4 mt-1 text-xs">
+                Original: {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+              </p>
             </div>
-          )}
 
-          <div className="flex space-x-3">
-            <button
-              onClick={handleUpload}
-              disabled={!file || uploading || uploaded}
-              className="flex flex-1 items-center justify-center space-x-2 rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
-            >
-              {uploading ? (
-                <>
-                  <Upload className="h-4 w-4 animate-spin" />
-                  <span>Processing...</span>
-                </>
-              ) : uploaded ? (
-                <>
-                  <CheckCircle className="h-4 w-4" />
-                  <span>Uploaded Successfully</span>
-                </>
-              ) : (
-                <>
-                  <Upload className="h-4 w-4" />
-                  <span>Upload Document</span>
-                </>
-              )}
-            </button>
+            <div>
+              <label className="text-neutral-6 block text-sm font-medium">Tags</label>
+              <input
+                type="text"
+                className="border-neutral-4 bg-neutral-2 mt-1 block w-full rounded-md border p-2"
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={handleTagKeyDown}
+              />
+            </div>
+
+            {tags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {tags.map((tag, i) => (
+                  <span
+                    key={i}
+                    className="bg-neutral-3 text-neutral-7 rounded-full px-2 py-1 text-sm"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <div className="flex justify-end gap-2 pt-4">
+              <Button onClick={handleCancel} variant="secondary">
+                Cancel
+              </Button>
+              <Button
+                onClick={handleUpload}
+                disabled={uploading || uploaded}
+                className="flex items-center space-x-2"
+              >
+                {uploading ? (
+                  <>
+                    <Upload className="h-4 w-4 animate-spin" />
+                    <span>Processing...</span>
+                  </>
+                ) : uploaded ? (
+                  <>
+                    <CheckCircle className="h-4 w-4" />
+                    <span>Uploaded Successfully</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-4 w-4" />
+                    <span>Upload Document</span>
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
-
-          {uploaded && (
-            <div className="text-center text-sm text-gray-600">Redirecting to library...</div>
-          )}
         </div>
-      </div>
+      )}
+
+      {uploaded && (
+        <div className="text-netrual-3 text-center text-sm">Redirecting to library...</div>
+      )}
     </div>
   )
 }
