@@ -63,13 +63,11 @@ export default function UploadPage() {
     setUploading(true)
 
     try {
-      await new Promise((r) => setTimeout(r, 2000))
-      const content = await readFileContent(file)
-      addDocument({
-        name: fileName || file.name,
-        content,
+      await addDocument({
+        title: fileName || file.name,
+        file: file, // <-- just send the File object
         size: file.size,
-        type: file.type,
+        tags: tags,
       })
       setUploaded(true)
       setTimeout(() => router.push('/'), 1500)
@@ -81,14 +79,14 @@ export default function UploadPage() {
     }
   }
 
-  const readFileContent = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onload = (e) => resolve(e.target?.result as string)
-      reader.onerror = reject
-      reader.readAsText(file)
-    })
-  }
+  // const readFileContent = (file: File): Promise<string> => {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader()
+  //     reader.onload = (e) => resolve(e.target?.result as string)
+  //     reader.onerror = reject
+  //     reader.readAsText(file)
+  //   })
+  // }
 
   useEffect(() => {
     if (!file) return

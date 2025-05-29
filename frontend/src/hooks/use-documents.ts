@@ -1,25 +1,25 @@
 'use client'
 import { useState, useEffect } from 'react'
-import baseUrl from './use-api'
+import baseUrl from '@/hooks/use-api'
 
 export interface Document {
   id: string
-  name: string
-  content: string
+  title: string
+  file: File
   size: number
-  type: string
   uploadedAt: string
+  tags: string[]
 }
 
 // Helper function to transform backend document to frontend format
 const transformBackendDocument = (backendDoc: any): Document => {
   return {
     id: backendDoc.id.toString(),
-    name: backendDoc.title,
-    content: backendDoc.content || '', // Assuming content field exists or is extracted
-    size: backendDoc.size || 0,
-    type: backendDoc.file_type || 'application/octet-stream',
-    uploadedAt: backendDoc.uploaded_at || backendDoc.created_at,
+    title: backendDoc.title,
+    file: backendDoc.file,
+    size: backendDoc.size,
+    uploadedAt: backendDoc.uploaded_at,
+    tags: backendDoc.tags || [],
   }
 }
 
@@ -33,6 +33,7 @@ export function useDocuments() {
         const response = await fetch(`${baseUrl}/documents/`)
         if (response.ok) {
           const data = await response.json()
+          console.log(data)
           const transformedDocs = data.documents.map(transformBackendDocument)
           setDocuments(transformedDocs)
         }
@@ -49,8 +50,9 @@ export function useDocuments() {
       const formData = new FormData()
 
       // Create a File object from the document data
-      const file = new File([doc.content], doc.name, { type: doc.type })
-      formData.append('document', file)
+      formData.append('title', doc.title)
+      formData.append('document', doc.file)
+      formData.append('tags', JSON.stringify(doc.tags || []))
 
       // Add tags if they exist in your document structure
       // formData.append('tags', JSON.stringify(doc.tags || []))
@@ -65,6 +67,7 @@ export function useDocuments() {
       }
 
       const data = await response.json()
+      console.log('Document added:', data)
 
       // Fetch updated documents list
       const documentsResponse = await fetch(`${baseUrl}/documents/`)

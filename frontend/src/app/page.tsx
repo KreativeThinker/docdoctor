@@ -56,7 +56,7 @@ export default function LibraryPage() {
                 <div className="flex items-start justify-between">
                   <div className="flex min-w-0 flex-1 items-center space-x-2">
                     <FileText className="h-5 w-5 flex-shrink-0 text-blue-500" />
-                    <h3 className="truncate text-lg font-semibold text-gray-900">{doc.name}</h3>
+                    <h3 className="truncate text-lg font-semibold text-gray-900">{doc.title}</h3>
                   </div>
                   <button
                     onClick={() => handleDelete(doc.id)}
