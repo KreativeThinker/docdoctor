@@ -9,6 +9,7 @@ export interface Document {
   size: number
   type: string
   uploadedAt: string
+  tags: string[]
 }
 
 export function useDocuments() {
