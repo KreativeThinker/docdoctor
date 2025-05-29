@@ -19,13 +19,12 @@ def get_all_documents(_):
 def upload_document(request):
     file = request.data.get("document")
     tags = request.data.getlist("tags")
+    title = request.data.get("title")
 
     if not file:
         return Response({"error": "No document provided"}, status=400)
 
-    document = Document.objects.create(
-        file=file, title=file.name, size=file.size
-    )
+    document = Document.objects.create(file=file, title=title, size=file.size)
 
     if tags:
         for tag_name in tags:
