@@ -6,4 +6,4 @@ from api.models import Document
 class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
-        fields = ["id", "title", "file", "created_at"]
+        fields = ["id", "title", "file", "created_at", "tags"]

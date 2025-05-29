@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from api.models import Document
+from api.models import Document, Tags
 from api.serializers import DocumentSerializer
 
 
@@ -18,10 +18,18 @@ def get_all_documents(_):
 @api_view(["POST"])
 def upload_document(request):
     file = request.data.get("document")
+    tags = request.data.getlist("tags")
+
     if not file:
         return Response({"error": "No document provided"}, status=400)
 
     document = Document.objects.create(file=file, title=file.name)
+
+    if tags:
+        for tag_name in tags:
+            tag, _ = Tags.objects.get_or_create(name=tag_name.strip())
+            document.tags.add(tag)
+
     return Response(
         {
             "message": "Document uploaded successfully",
