@@ -14,3 +14,15 @@ class Document(models.Model):
 class Tags(models.Model):
     name = models.CharField(max_length=32, unique=True)
     objects: Manager = models.Manager()
+
+
+class Chunk(models.Model):
+    document = models.ForeignKey(
+        Document, on_delete=models.CASCADE, related_name="chunks"
+    )
+    content = models.TextField()
+    chunk_number = models.PositiveIntegerField()
+    objects: Manager = models.Manager()
+
+    class Meta:
+        unique_together = ("document", "chunk_number")
