@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -135,3 +136,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOW_ALL_ORIGINS = True
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# --- LLM and ChromaDB Configuration ---
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", None)
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", None)
+LM_STUDIO_BASE_URL = os.getenv("LM_STUDIO_BASE_URL", "http://localhost:1234")
+CHROMADB_HOST = os.getenv("CHROMADB_HOST", "127.0.0.1")
+CHROMADB_PORT = os.getenv("CHROMADB_PORT", "3003")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
