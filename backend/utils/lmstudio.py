@@ -19,7 +19,7 @@ def query_lm_studio(
     ]
 
     response = requests.post(
-        "http://localhost:1234/v1/chat",
+        "http://localhost:1234/v1/chat/completions",
         headers={"Content-Type": "application/json"},
         json={
             "model": model,
