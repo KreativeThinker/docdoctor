@@ -22,6 +22,18 @@ services:
     volumes:
       - ${CHROMA_VOLUME:-chroma_data}:/chroma/.chroma
 
+  lmstudio:
+    image: ghcr.io/n0mer1/lmstudio:main
+    container_name: lmstudio
+    ports:
+      - "${LMSTUDIO_PORT:-1234}:1234"
+    volumes:
+      - lmstudio_data:/root/.cache/lm-studio
+    stdin_open: true
+    tty: true
+    restart: always
+
 volumes:
   mysql_data:
   chroma_data:
+  lmstudio_data:
