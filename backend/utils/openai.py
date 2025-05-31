@@ -1,10 +1,11 @@
 import os
 
-import openai
+from openai import OpenAI
 
 # Set your OpenAI API key
 api_key = os.getenv("OPENAI_API_KEY")
-openai.api_key = api_key
+client = OpenAI(api_key=api_key)
+
 
 system_instruction = {
     "role": "system",
@@ -21,10 +22,7 @@ def query_openai(context_chunks: list[str], user_query: str, model="gpt-4"):
             "content": f"Context:\n{context}\n\nQuestion: {user_query}",
         },
     ]
-    response = openai.ChatCompletion.create(
-        model=model,
-        messages=messages,
-        max_tokens=1024,
-        temperature=0.2,
+    response = client.chat.completions.create(
+        model=model, messages=messages, max_tokens=1024, temperature=0.2
     )
-    return response.choices[0].message["content"]
+    return response.choices[0].message.content
