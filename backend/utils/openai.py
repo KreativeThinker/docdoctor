@@ -13,7 +13,9 @@ system_instruction = {
 }
 
 
-def query_openai(context_chunks: list[str], user_query: str, model="gpt-4"):
+def query_openai(
+    context_chunks: list[str], user_query: str, model="gpt-4o-mini"
+):
     context = "\n\n".join(context_chunks)
     messages = [
         system_instruction,
