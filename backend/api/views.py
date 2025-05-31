@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from api.document import process_document
+from api.document import delete_chunks, delete_embeddings, process_document
 from api.models import Document, Tags
 from api.rag import process_query
 from api.serializers import DocumentSerializer
@@ -72,6 +72,8 @@ def get_document_by_id(_, document_id):
 
 def delete_document(_, document_id):
     document = get_object_or_404(Document, id=document_id)
+    delete_chunks(document_id)
+    delete_embeddings(document_id)
     document.file.delete(save=False)
     document.delete()
 

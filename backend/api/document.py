@@ -16,6 +16,17 @@ def store_chunks(doc_id: str, chunks: list):
     )
 
 
+def delete_chunks(doc_id: str):
+    Chunk.objects.filter(document_id=doc_id).delete()
+
+
+def delete_embeddings(doc_id: str):
+    from utils.embed import client
+
+    collection = client.get_collection("documents")
+    collection.delete(where={"doc_id": doc_id})
+
+
 def process_document(path: str, doc_id: str):
     pages = parse_document(path)
     chunks = chunk_paragraphs_with_limit(pages)
