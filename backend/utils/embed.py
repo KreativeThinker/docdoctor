@@ -4,18 +4,19 @@ from sentence_transformers import SentenceTransformer
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
+client = chromadb.HttpClient(
+    host="localhost",
+    port=3002,
+    settings=Settings(chroma_api_impl="chromadb.api.fastapi.FastAPI"),
+)
+
 
 def embed_chunks(chunks: list[str]) -> list[list[float]]:
     return model.encode(chunks).tolist()
 
 
-client = chromadb.Client(
-    Settings(
-        chroma_api_impl="rest",
-        chroma_server_host="localhost",  # or your host IP
-        chroma_server_http_port=3002,
-    )
-)
+def embed_query(query: str) -> list[float]:
+    return model.encode(query).tolist()
 
 
 def store_vectors(
@@ -32,3 +33,15 @@ def store_vectors(
         metadatas=metadatas,
         documents=documents,
     )
+
+
+def retrieve_top_chunks(
+    collection_name: str, query_embedding: list[float], top_k: int = 3
+) -> list[str]:
+    col = client.get_collection(collection_name)
+    results = col.query(
+        query_embeddings=[query_embedding],
+        n_results=top_k,
+        include=["documents"],
+    )
+    return results["documents"][0]
