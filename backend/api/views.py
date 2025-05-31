@@ -2,7 +2,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from api.document import process_document
 from api.models import Document, Tags
+from api.rag import process_query
 from api.serializers import DocumentSerializer
 
 
@@ -25,6 +27,7 @@ def upload_document(request):
         return Response({"error": "No document provided"}, status=400)
 
     document = Document.objects.create(file=file, title=title, size=file.size)
+    process_document(document.file.path, str(document.id))
 
     if tags:
         for tag_name in tags:
@@ -48,7 +51,7 @@ def ask_question(request):
         return Response({"error": "No question provided"}, status=400)
 
     # Simulate answering the question
-    answer = f"Answer to '{question}'"
+    answer = process_query(question, top_k=3)
     return Response({"question": question, "answer": answer}, status=200)
 
 
