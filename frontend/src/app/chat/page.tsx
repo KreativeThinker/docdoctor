@@ -76,8 +76,8 @@ export default function ChatPage() {
           </div>
           <div className="flex flex-1 flex-col p-6">
             {/* Messages */}
-            <div className="mb-4 flex-1 overflow-y-auto">
-              <div className="space-y-4">
+            <div className="mb-4 h-full flex-1 overflow-y-scroll">
+              <div className="space-y-4 overflow-y-scroll">
                 {messages.length === 0 && (
                   <div className="py-8 text-center text-gray-500">
                     <Bot className="mx-auto mb-2 h-8 w-8" />
@@ -92,22 +92,22 @@ export default function ChatPage() {
                     }`}
                   >
                     {message.role === 'assistant' && (
-                      <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-full">
-                        <Bot className="text-primary h-4 w-4" />
+                      <div className="bg-neutral-2/80 flex h-8 w-8 items-center justify-center rounded-full p-1">
+                        <Bot className="text-primary h-full w-full" />
                       </div>
                     )}
                     <div
                       className={`max-w-[80%] rounded-lg px-3 py-2 ${
                         message.role === 'user'
                           ? 'text-neutral-1 bg-primary'
-                          : 'bg-gray-100 text-gray-900'
+                          : 'bg-neutral-2/80 text-accent'
                       }`}
                     >
                       <p className="text-sm">{message.content}</p>
                     </div>
                     {message.role === 'user' && (
-                      <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-full">
-                        <User className="text-primary h-4 w-4" />
+                      <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-full p-1">
+                        <User className="text-neutral-1 h-full w-full" />
                       </div>
                     )}
                   </div>
