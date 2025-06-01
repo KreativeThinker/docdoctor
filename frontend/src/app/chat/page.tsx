@@ -25,7 +25,7 @@ export default function ChatPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (input.trim() && document) {
-      sendMessage(input, document.content)
+      sendMessage(input, document.id)
       setInput('')
     }
   }
