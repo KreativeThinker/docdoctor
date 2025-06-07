@@ -1,7 +1,7 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 
-def chunk_paragraphs_with_limit(
+async def chunk_paragraphs_with_limit(
     pages: list[str], chunk_size=500, chunk_overlap=50
 ) -> list[str]:
     paragraphs = []

@@ -6,7 +6,7 @@ system_instruction = {
 }
 
 
-def query_lm_studio(
+async def query_lm_studio(
     context_chunks: list[str], user_query: str, model="local-model"
 ):
     context = "\n\n".join(context_chunks)

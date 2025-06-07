@@ -11,15 +11,15 @@ client = chromadb.HttpClient(
 )
 
 
-def embed_chunks(chunks: list[str]) -> list[list[float]]:
+async def embed_chunks(chunks: list[str]) -> list[list[float]]:
     return model.encode(chunks).tolist()
 
 
-def embed_query(query: str) -> list[float]:
+async def embed_query(query: str) -> list[float]:
     return model.encode(query).tolist()
 
 
-def store_vectors(
+async def store_vectors(
     collection_name: str,
     ids: list[str],
     embeddings: list[list[float]],
@@ -29,13 +29,13 @@ def store_vectors(
     col = client.get_or_create_collection(collection_name)
     col.add(
         ids=ids,
-        embeddings=embeddings,
-        metadatas=metadatas,
+        embeddings=embeddings,  # type: ignore
+        metadatas=metadatas,  # type: ignore
         documents=documents,
     )
 
 
-def retrieve_top_chunks(
+async def retrieve_top_chunks(
     collection_name: str,
     query_embedding: list[float],
     document_id: str,
@@ -45,8 +45,12 @@ def retrieve_top_chunks(
     results = col.query(
         query_embeddings=[query_embedding],
         n_results=top_k,
-        include=["documents"],
+        include=["documents"],  # type: ignore
         where={"doc_id": document_id},
     )
     __import__("pprint").pprint(results)
-    return results["documents"][0]
+    docs = results.get("documents")
+    if not docs:
+        return []
+
+    return docs[0]

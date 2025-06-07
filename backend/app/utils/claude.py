@@ -5,7 +5,7 @@ from anthropic import AI_PROMPT, HUMAN_PROMPT, Anthropic
 client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
 
-def query_claude(
+async def query_claude(
     context_chunks: list[str], user_query: str, model="claude-3-opus-20240229"
 ):
     context = "\n\n".join(context_chunks)
