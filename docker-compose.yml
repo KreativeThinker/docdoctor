@@ -1,17 +1,16 @@
 services:
-  mysql:
-    image: mysql:8.0
+  postgres:
+    image: postgres:16
     restart: always
-    container_name: mysql
+    container_name: postgres
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: doc_intel
-      MYSQL_USER: doc_user
-      MYSQL_PASSWORD: doc_pass
+      POSTGRES_DB: doc_intel
+      POSTGRES_USER: doc_user
+      POSTGRES_PASSWORD: doc_pass
     ports:
-      - "${MYSQL_PORT:-3001}:3306"
+      - "${POSTGRES_PORT:-3001}:5432"
     volumes:
-      - ${MYSQL_VOLUME:-mysql_data}:/var/lib/mysql
+      - ${POSTGRES_VOLUME:-postgres_data}:/var/lib/postgresql/data
 
   chromadb:
     image: chromadb/chroma
@@ -23,5 +22,5 @@ services:
       - ${CHROMA_VOLUME:-chroma_data}:/chroma/.chroma
 
 volumes:
-  mysql_data:
+  postgres_data:
   chroma_data:
