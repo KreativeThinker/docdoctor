@@ -26,6 +26,7 @@ CHROMADB_HOST = os.getenv("CHROMADB_HOST", "127.0.0.1")
 CHROMADB_PORT = int(os.getenv("CHROMADB_PORT", 3002))
 LLAMA_CPP_PORT = int(os.getenv("LLAMA_CPP_PORT", 3005))
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+MEDIA_DIR = Path(os.getenv("MEDIA_DIR", BASE_DIR / "media"))
 
 
 @dataclass
