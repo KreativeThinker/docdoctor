@@ -4,7 +4,20 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = [ "fastapi>=0.115.12", "pydantic>=2.11.5", "uvicorn[standard]>=0.34.3",]
+dependencies = [
+ "anthropic>=0.52.2",
+ "chromadb>=0.6.3",
+ "docx>=0.2.4",
+ "fastapi>=0.115.12",
+ "langchain>=0.3.25",
+ "openai>=1.84.0",
+ "pydantic>=2.11.5",
+ "pypdf2>=3.0.1",
+ "requests>=2.32.3",
+ "sentence-transformers>=4.1.0",
+ "sqlmodel>=0.0.24",
+ "uvicorn[standard]>=0.34.3",
+]
 [[project.authors]]
 name = "Anumeya Sehgal"
 email = "anumeyasehgal@proton.me"
@@ -30,3 +43,6 @@ version_scheme = "pep440"
 version_provider = "uv"
 update_changelog_on_bump = true
 major_version_zero = true
+
+[tool.prisma]
+schema = "prisma/schema.prisma"
