@@ -1,0 +1,32 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [ "fastapi>=0.115.12", "pydantic>=2.11.5", "uvicorn[standard]>=0.34.3",]
+[[project.authors]]
+name = "Anumeya Sehgal"
+email = "anumeyasehgal@proton.me"
+
+[dependency-groups]
+dev = [ "black>=25.1.0", "commitizen>=4.8.2", "flake8>=7.2.0", "isort>=6.0.1", "pre-commit>=4.2.0",]
+
+[tool.black]
+line-length = 79
+
+[tool.isort]
+profile = "black"
+line_length = 79
+
+[tool.flake8]
+max-line-length = 79
+extend-ignore = [ "E203", "W503",]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+version_scheme = "pep440"
+version_provider = "uv"
+update_changelog_on_bump = true
+major_version_zero = true
