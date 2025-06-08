@@ -1,14 +1,18 @@
-import chromadb
-from chromadb.config import Settings
+from chromadb import AsyncHttpClient
 from sentence_transformers import SentenceTransformer
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-client = chromadb.HttpClient(
-    host="localhost",
-    port=3002,
-    settings=Settings(chroma_api_impl="chromadb.api.fastapi.FastAPI"),
-)
+client = None
+
+
+async def init_client():
+    global client
+    if client is None:
+        client = await AsyncHttpClient(
+            host="localhost",
+            port=3002,
+        )
 
 
 async def embed_chunks(chunks: list[str]) -> list[list[float]]:

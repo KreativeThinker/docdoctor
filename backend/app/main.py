@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import document
 from app.core import config
+from app.utils import init_client
 from prisma import Prisma
 
 app = FastAPI()
@@ -14,6 +15,7 @@ db = Prisma(auto_register=True)
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     await db.connect()
+    await init_client()
     yield
     await db.disconnect()
 
