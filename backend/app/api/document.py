@@ -6,12 +6,12 @@ from prisma.models import Document, Tag
 
 from app.utils import (
     chunk_paragraphs_with_limit,
+    delete_embeddings,
     embed_chunks,
     parse_document,
+    save_upload_file,
     store_vectors,
 )
-from app.utils.embed import client
-from app.utils.filestorage import save_upload_file
 
 router = APIRouter(prefix="/api")
 
@@ -106,37 +106,40 @@ async def search_documents(q: str = "", tag: Optional[List[str]] = None):
     return {"documents": documents}
 
 
-async def store_chunks(doc_id: str, chunks: list):
+async def store_chunks(document_id: str, chunks: list):
+    print(f"Storing {len(chunks)} chunks for document {document_id}")
     from prisma.models import Chunk
 
-    return Chunk.prisma().create_many(
+    return await Chunk.prisma().create_many(
         data=[
-            {"document_id": doc_id, "content": chunk, "chunk_number": i}
+            {
+                "document_id": int(document_id),
+                "content": chunk,
+                "chunk_number": i,
+            }
             for i, chunk in enumerate(chunks)
         ]
     )
 
 
-async def delete_chunks(doc_id: str):
+async def delete_chunks(document_id: str):
     from prisma.models import Chunk
 
-    return await Chunk.prisma().delete_many(where={"document_id": int(doc_id)})
+    return await Chunk.prisma().delete_many(
+        where={"document_id": int(document_id)}
+    )
 
 
-async def delete_embeddings(doc_id: str):
-    collection = client.get_collection("documents")
-    collection.delete(where={"doc_id": doc_id})
-
-
-async def process_document(path: str, doc_id: str):
+async def process_document(path: str, document_id: str):
     pages = parse_document(path)
     chunks = await chunk_paragraphs_with_limit(pages)
-    await store_chunks(doc_id, chunks)
+    await store_chunks(document_id, chunks)
 
     embeddings = await embed_chunks(chunks)
-    ids = [f"{doc_id}_{i}" for i in range(len(chunks))]
+    ids = [f"{document_id}_{i}" for i in range(len(chunks))]
     metadatas = [
-        {"doc_id": doc_id, "chunk_index": i} for i in range(len(chunks))
+        {"document_id": document_id, "chunk_index": i}
+        for i in range(len(chunks))
     ]
     await store_vectors("documents", ids, embeddings, metadatas, chunks)
 
