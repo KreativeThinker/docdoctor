@@ -27,8 +27,8 @@ model Chunk {
   id           Int      @id @default(autoincrement())
   content      String
   chunk_number Int
-  document     Document @relation(fields: [documentId], references: [id])
-  documentId   Int
+  document     Document @relation(fields: [document_id], references: [id])
+  document_id  Int
 
-  @@unique([documentId, chunk_number])
+  @@unique([document_id, chunk_number])
 }
