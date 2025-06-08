@@ -30,11 +30,11 @@ async def store_vectors(
     metadatas: list[dict],
     documents: list[str],
 ):
-    col = client.get_or_create_collection(collection_name)
-    col.add(
+    col = await client.get_or_create_collection(name=collection_name)
+    await col.add(
         ids=ids,
-        embeddings=embeddings,  # type: ignore
-        metadatas=metadatas,  # type: ignore
+        embeddings=embeddings,
+        metadatas=metadatas,
         documents=documents,
     )
 
@@ -45,16 +45,17 @@ async def retrieve_top_chunks(
     document_id: str,
     top_k: int = 3,
 ) -> list[str]:
-    col = client.get_collection(collection_name)
-    results = col.query(
+    col = await client.get_collection(name=collection_name)
+    results = await col.query(
         query_embeddings=[query_embedding],
         n_results=top_k,
-        include=["documents"],  # type: ignore
-        where={"doc_id": document_id},
+        include=["documents"],
+        where={"document_id": document_id},
     )
-    __import__("pprint").pprint(results)
     docs = results.get("documents")
-    if not docs:
-        return []
+    return docs[0] if docs else []
 
-    return docs[0]
+
+async def delete_embeddings(document_id: str):
+    col = await client.get_collection(name="documents")
+    await col.delete(where={"document_id": document_id})
