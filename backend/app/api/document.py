@@ -62,7 +62,7 @@ async def ask_question(data: dict):
             status_code=400, detail="Missing document_id or question"
         )
 
-    answer = process_query(question, document_id, top_k=5)
+    answer = await process_query(question, document_id, top_k=5)
     return {"question": question, "answer": answer}
 
 
