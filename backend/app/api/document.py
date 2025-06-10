@@ -28,9 +28,15 @@ async def upload_document(
     title: str = Form(...),
     tags: Optional[List[str]] = Form(None),
 ):
-    save_path = await save_upload_file(document)
+    save_path, filename = await save_upload_file(document)
+    save_path = str(save_path)
+    # save_path = f"media/{document.filename}"
     doc = await Document.prisma().create(
-        data={"file": save_path, "title": title, "size": document.size}
+        data={
+            "file": f"media/{filename}",
+            "title": title,
+            "size": document.size,
+        }
     )
 
     if tags:
@@ -107,7 +113,6 @@ async def search_documents(q: str = "", tag: Optional[List[str]] = None):
 
 
 async def store_chunks(document_id: str, chunks: list):
-    print(f"Storing {len(chunks)} chunks for document {document_id}")
     from prisma.models import Chunk
 
     return await Chunk.prisma().create_many(

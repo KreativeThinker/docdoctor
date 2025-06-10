@@ -59,7 +59,7 @@ export default function ChatPage() {
           </div>
           <div className="flex-1 overflow-hidden p-6">
             <div className="h-full">
-              <iframe src={`http://localhost:3003${document.file}`} className="h-full w-full" />
+              <iframe src={`http://localhost:3003/${document.file}`} className="h-full w-full" />
             </div>
           </div>
         </div>

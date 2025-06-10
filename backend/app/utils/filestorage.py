@@ -8,7 +8,7 @@ from app.core.config import MEDIA_DIR
 ALLOWED_MIME_TYPES = {"application/pdf", "text/plain"}
 
 
-async def save_upload_file(file: UploadFile) -> str:
+async def save_upload_file(file: UploadFile) -> tuple[Path, str]:
     if file.content_type not in ALLOWED_MIME_TYPES:
         raise ValueError("Unsupported file type")
 
@@ -22,4 +22,4 @@ async def save_upload_file(file: UploadFile) -> str:
         while content := await file.read(1024 * 1024):
             buffer.write(content)
 
-    return str(destination)
+    return destination, filename
