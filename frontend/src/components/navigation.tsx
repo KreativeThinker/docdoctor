@@ -19,7 +19,7 @@ export function Navigation() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-2">
             <FileText className="text-primary h-6 w-6" />
-            <span className="text-primary text-xl font-bold">DocChat</span>
+            <span className="text-primary text-xl font-bold">DocDoctor</span>
           </div>
           <div className="flex items-center space-x-2">
             {navItems.map((item) => {

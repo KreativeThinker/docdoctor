@@ -36,12 +36,17 @@ def store_vectors(
 
 
 def retrieve_top_chunks(
-    collection_name: str, query_embedding: list[float], top_k: int = 3
+    collection_name: str,
+    query_embedding: list[float],
+    document_id: str,
+    top_k: int = 3,
 ) -> list[str]:
     col = client.get_collection(collection_name)
     results = col.query(
         query_embeddings=[query_embedding],
         n_results=top_k,
         include=["documents"],
+        where={"doc_id": document_id},
     )
+    __import__("pprint").pprint(results)
     return results["documents"][0]

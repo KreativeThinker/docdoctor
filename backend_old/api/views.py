@@ -46,12 +46,16 @@ def upload_document(request):
 
 @api_view(["POST"])
 def ask_question(request):
+    document_id = request.data.get("document_id")
+    if not document_id:
+        return Response({"error": "No document provided"}, status=400)
+
     question = request.data.get("question")
     if not question:
         return Response({"error": "No question provided"}, status=400)
 
     # Simulate answering the question
-    answer = process_query(question, top_k=3)
+    answer = process_query(question, document_id, top_k=5)
     return Response({"question": question, "answer": answer}, status=200)
 
 

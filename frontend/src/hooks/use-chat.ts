@@ -12,7 +12,7 @@ export function useChat() {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const sendMessage = async (message: string, documentContent: string) => {
+  const sendMessage = async (message: string, documentID: string) => {
     const userMessage: Message = { role: 'user', content: message }
     setMessages((prev) => [...prev, userMessage])
     setIsLoading(true)
@@ -25,8 +25,7 @@ export function useChat() {
         },
         body: JSON.stringify({
           question: message,
-          // You might want to pass document context if your backend supports it
-          document_content: documentContent,
+          document_id: documentID,
         }),
       })
 

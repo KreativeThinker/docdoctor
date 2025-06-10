@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-py"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://doc_user:doc_pass@localhost:3001/doc_intel"
+}
+
+model Document {
+  id          Int      @id @default(autoincrement())
+  file        String
+  uploaded_at DateTime @default(now())
+  title       String
+  size        Int
+  tags        Tag[]    @relation("DocumentTags")
+  chunks      Chunk[]
+}
+
+model Tag {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  documents Document[] @relation("DocumentTags")
+}
+
+model Chunk {
+  id           Int      @id @default(autoincrement())
+  content      String
+  chunk_number Int
+  document     Document @relation(fields: [document_id], references: [id])
+  document_id  Int
+
+  @@unique([document_id, chunk_number])
+}

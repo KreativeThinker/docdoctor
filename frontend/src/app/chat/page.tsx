@@ -25,7 +25,7 @@ export default function ChatPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (input.trim() && document) {
-      sendMessage(input, document.content)
+      sendMessage(input, document.id)
       setInput('')
     }
   }
@@ -59,7 +59,7 @@ export default function ChatPage() {
           </div>
           <div className="flex-1 overflow-hidden p-6">
             <div className="h-full">
-              <iframe src={`http://localhost:3003${document.file}`} className="h-full w-full" />
+              <iframe src={`http://localhost:3003/${document.file}`} className="h-full w-full" />
             </div>
           </div>
         </div>

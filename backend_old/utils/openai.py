@@ -2,10 +2,7 @@ import os
 
 from openai import OpenAI
 
-# Set your OpenAI API key
-api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=api_key)
-
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY", "asd"))
 
 system_instruction = {
     "role": "system",
