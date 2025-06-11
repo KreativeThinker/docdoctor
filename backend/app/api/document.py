@@ -8,7 +8,10 @@ from app.utils import (
     chunk_paragraphs_with_limit,
     delete_embeddings,
     embed_chunks,
+    embed_query,
     parse_document,
+    query_lm_studio,
+    retrieve_top_chunks,
     save_upload_file,
     store_vectors,
 )
@@ -150,8 +153,6 @@ async def process_document(path: str, document_id: str):
 
 
 async def process_query(query: str, document_id: str, top_k=5) -> str:
-    from utils import embed_query, query_lm_studio, retrieve_top_chunks
-
     embedding = await embed_query(query)
     chunks = await retrieve_top_chunks(
         "documents", embedding, document_id, top_k=top_k
